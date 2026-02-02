@@ -1,0 +1,252 @@
+---
+title: "Lab3"
+author: "Minyoung So"
+date: "2026-02-01"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+---
+title: "Lab3"
+format: html
+editor: visual
+---
+
+### 1. Read in the data
+
+```{r}
+met <- read.csv("/Users/smartso/Downloads/met_all.gz")
+```
+
+### 2. Check the dimensions, headers, footers
+
+It has 2377343 rows X 30 columns.
+
+```{r}
+dim(met)
+head(met)
+```
+
+### 3. Take a look at all the variables
+
+```{r}
+str(met)
+```
+
+### 4 Take a closer look at the key variables (year, day, hour, temp, elev, wind.sp)
+
+The elevation of the highest weather station is 4113 (Meters). After
+removing the -40C points, the lowest temperature is -17.20C.
+
+```{r}
+met$elev[met$elev == 9999] <- NA
+met$temp[met$temp == -40.00] <- NA
+summary(met[, c("year", "day", "hour", "temp", "elev", "wind.sp")])
+```
+
+### 5. Check the data against an external data source.
+
+#### Elevation range
+
+Validation of total range of elevations in the met data: -13 meters \<
+elevation \< 4113 meters
+
+According to Google The United States land elevation ranges: the lowest
+point: Badwater Basin in Death Valley, CA: approximately -86 meters
+(-282 feet) the highest point: Denali at Mount McKinley, AK: 6,194
+meters (20,320 feet).
+
+Therefore, the elevation of weather stations in this met data is
+reliable.
+
+#### Suspicious -17.2C temperature value
+
+There are 6 data points whose temperature is -17.20C, and they are all
+from one location (38.77,-104.3). It is located at around 20 miles to
+the east from Colorado spring in CO according to google map. The
+elevation (1838 meters) is not high enough to approach such a low
+temperature during the summer. The nearest summit is Pikes Peak summit
+(\~4,300 meters) which has about freezing point as a low temperature of
+the summer according to Google. I changed the -17.20 to NA.
+
+#### Other suspicious temperature value
+
+The suspicious temperature value -17.00C was found in 9 data points from
+two different weather stations located at (27.901, -98.052)(in Texas)
+and (38.767, -104.300)(in colorado, the same place of -17.20C). Because
+they do not have high elevation (\>3,000 meters), they are likely to be
+errors. I changed the -17.00 to NA.
+
+```{r}
+library(dplyr)
+## Search for locations of weather stations that have below -1C 
+met_low <- filter(met, temp < -1) |> 
+  select(lat, lon, elev, temp)|> 
+  distinct()|> 
+  arrange(temp)
+dim(met_low)
+print(met_low)
+
+## Search and Remove -17.20C data points
+met_sl <- filter(met, temp == -17.20) |> 
+  select(USAFID, day, hour, lat, lon, elev, temp, wind.sp)
+dim(met_sl)
+summary(met_sl)
+met$temp[met$temp == -17.20] <- NA
+
+
+## Search and Remove for -17.00C data points
+met_tl <- filter(met, temp == -17.00) |> 
+  select(USAFID, day, hour, lat, lon, elev, temp, wind.sp)
+
+dim(met_tl)
+summary(met_tl)
+
+
+met$temp[met$temp == -17.00] <- NA
+summary(met[, c("year", "day", "hour", "temp", "elev", "wind.sp")])
+```
+
+### 6.Calculate summary statistics
+
+To calculate the correlations, I drop the missing values Correlations
+between temperature and wind speed is -0.009 indicating little
+association between two variable at the highest elevation weather
+station. Temperature is also likely not to have association with day
+with -0.006. However, with hour, temperature showed a mild association
+(0.436), suggesting the diurnal cycle of temperature at the weather
+station during August. However, wind did not have the level of
+association with hour (0.088), suggesting no diurnal cycle of wind at
+the location in August. Wind and day have a mild association (0.364).
+The wind showed tendancy to slightly stronger over time during the
+August at the weather station.
+
+```{r}
+## Max elevation weather station in.fo
+met_xstation <- filter(met, elev == 4113) |> 
+  select(USAFID, day, hour, lat, lon, elev, temp, wind.sp)
+dim(met_xstation)
+summary(met_xstation)
+
+## Drop missing values
+met_xstation_cc <- met_xstation |>
+  select(temp, wind.sp, hour, day) |>
+  na.omit()
+
+## Correlations
+cor_temp_wind <- cor(
+  met_xstation_cc$temp,
+  met_xstation_cc$wind.sp
+)
+cor_temp_wind
+
+cor_matrix <- cor(
+  met_xstation_cc[, c("temp", "wind.sp", "hour", "day")]
+)
+cor_matrix
+
+list(
+  temp_wind = cor_matrix["temp", "wind.sp"],
+  temp_hour = cor_matrix["temp", "hour"],
+  temp_day  = cor_matrix["temp", "day"],
+  wind_hour = cor_matrix["wind.sp", "hour"],
+  wind_day  = cor_matrix["wind.sp", "day"]
+)
+
+```
+
+### 7. Exploratory graphs
+
+The highest-elevation weather station is located on a mountainside, with
+a range of mountains extending to the east. According to time-series
+graphs, temperature exhibits a clear diurnal pattern, with cycles
+repeating relatively consistently throughout the month, reflecting
+regular daily heating and cooling processes. Wind speed shows greater
+short-term variability at finer temporal scales, but overall, wind
+conditions in early August are relatively calm, with speeds generally
+below 10 m/s. However, two distinct periods of increased wind speed are
+observed between August 10th and August 26th, each lasting approximately
+seven days, suggesting the influence of broader atmospheric processes.
+
+```{r}
+## Histograms
+par(mfrow = c(1, 3))
+
+hist(met$elev,
+     main = "Histogram of Elevation",
+     xlab = "Elevation (m)",
+     col = "lightblue")
+
+hist(met$temp,
+     main = "Histogram of Temperature",
+     xlab = "Temperature",
+     col = "lightgreen")
+
+hist(met$wind.sp,
+     main = "Histogram of Wind Speed",
+     xlab = "Wind Speed",
+     col = "lightpink")
+
+par(mfrow = c(1, 1))
+
+
+## Subset to maximum elevation
+elev <- met |>
+  filter(elev == max(elev, na.rm = TRUE))
+## Map
+library(leaflet)
+
+leaflet(elev) %>%
+  addProviderTiles('OpenStreetMap') %>% 
+  addCircles(lat=~lat,lng=~lon, opacity=1, fillOpacity=1, radius=100)
+
+## create date-time variables
+library(lubridate)
+elev$date <- with(elev, ymd_h(paste(year, month, day, hour, sep= ' ')))
+summary(elev$date)
+elev <- elev[order(elev$date), ]
+head(elev)
+
+## plot time-series data
+# Temperature time series
+plot(elev$date, elev$temp,
+     type = "l",
+     xlab = "Date",
+     ylab = "Temperature",
+     main = "Temperature Time Series at Highest Elevation Station")
+
+# Wind speed time series
+plot(elev$date, elev$wind.sp,
+     type = "l",
+     xlab = "Date",
+     ylab = "Wind Speed",
+     main = "Wind Speed Time Series at Highest Elevation Station")
+
+```
+
+### 8. Ask questions
+
+1.  Units of measurement The units of all variables were confirmed using
+    the data dictionary and were applied throughout the report.
+
+2.  Wind speed cycles at the highest-elevation station Two periods of
+    increased wind speed were observed at the highest-elevation station.
+    Further analysis could be done to assess whether these cycles are
+    seasonal, whether similar patterns occur at nearby stations, and
+    whether local topography—particularly the station’s position on the
+    eastern side of a mountain range—contributes to the observed
+    behavior.
+
+3.  Extreme temperature value in Florida (−40 °C) A temperature of −40
+    °C was observed in Florida. The possibility that the intended value
+    was +40 °C will be asked.
+
+4.  Weather station in Cololado (38.77, −104.30). The weather staion has
+    data points with two different extreme temperatures. Possible
+    explanations may include sign errors, sensor malfunctions, or data
+    recording issues. Additionally, the station’s proximity to an
+    airstrip may have influenced the measurements, potentially
+    introducing artifacts related to aircraft activity or localized
+    environmental disturbances.
