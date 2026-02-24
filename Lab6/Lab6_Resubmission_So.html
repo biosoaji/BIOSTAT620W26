@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="MinyoungSo">
+
+<title>Lab 6</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Lab6_Resubmission_So_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Lab6_Resubmission_So_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Lab6_Resubmission_So_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Lab6_Resubmission_So_files/libs/quarto-html/popper.min.js"></script>
+<script src="Lab6_Resubmission_So_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Lab6_Resubmission_So_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Lab6_Resubmission_So_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Lab6_Resubmission_So_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Lab6_Resubmission_So_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Lab6_Resubmission_So_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Lab6_Resubmission_So_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 6</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>MinyoungSo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="lab-6---text-mining" class="level1">
+<h1>Lab 6 - Text Mining</h1>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (tidytext)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ lubridate 1.9.5     ✔ tibble    3.3.0
+✔ purrr     1.1.0     ✔ tidyr     1.3.1
+✔ readr     2.1.5     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">'https://raw.githubusercontent.com/dmcable/BIOSTAT620W26/main/data/mtsamples/mtsamples.csv'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"mtsamples.csv"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> url,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">destfile =</span> <span class="st">"mtsamples.csv"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">method   =</span> <span class="st">"libcurl"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">timeout  =</span> <span class="dv">60</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mtsamples <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'mtsamples.csv'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mtsamples)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4999    6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(mtsamples)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   4999 obs. of  6 variables:
+ $ X                : int  0 1 2 3 4 5 6 7 8 9 ...
+ $ description      : chr  " A 23-year-old white female presents with complaint of allergies." " Consult for laparoscopic gastric bypass." " Consult for laparoscopic gastric bypass." " 2-D M-Mode. Doppler.  " ...
+ $ medical_specialty: chr  " Allergy / Immunology" " Bariatrics" " Bariatrics" " Cardiovascular / Pulmonary" ...
+ $ sample_name      : chr  " Allergic Rhinitis " " Laparoscopic Gastric Bypass Consult - 2 " " Laparoscopic Gastric Bypass Consult - 1 " " 2-D Echocardiogram - 1 " ...
+ $ transcription    : chr  "SUBJECTIVE:,  This 23-year-old white female presents with complaint of allergies.  She used to have allergies w"| __truncated__ "PAST MEDICAL HISTORY:, He has difficulty climbing stairs, difficulty with airline seats, tying shoes, used to p"| __truncated__ "HISTORY OF PRESENT ILLNESS: , I have seen ABC today.  He is a very pleasant gentleman who is 42 years old, 344 "| __truncated__ "2-D M-MODE: , ,1.  Left atrial enlargement with left atrial diameter of 4.7 cm.,2.  Normal size right and left "| __truncated__ ...
+ $ keywords         : chr  "allergy / immunology, allergic rhinitis, allergies, asthma, nasal sprays, rhinitis, nasal, erythematous, allegr"| __truncated__ "bariatrics, laparoscopic gastric bypass, weight loss programs, gastric bypass, atkin's diet, weight watcher's, "| __truncated__ "bariatrics, laparoscopic gastric bypass, heart attacks, body weight, pulmonary embolism, potential complication"| __truncated__ "cardiovascular / pulmonary, 2-d m-mode, doppler, aortic valve, atrial enlargement, diastolic function, ejection"| __truncated__ ...</code></pre>
+</div>
+</div>
+</section>
+<section id="question-1-what-specialties-do-we-have" class="level2">
+<h2 class="anchored" data-anchor-id="question-1-what-specialties-do-we-have">Question 1: What specialties do we have?</h2>
+<p>There are 40 different categories. They are not evenly distributed. It ranges from “Surgery (n=11103)” to “Hospice - Palliative Care (n=6)”. The categories are not closely related each other. The different levels of specialty (disease areas, treatment types, drug types and etc.) are mixed and overlapped.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mtsamples <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(medical_specialty, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                medical_specialty    n
+1                         Surgery 1103
+2      Consult - History and Phy.  516
+3      Cardiovascular / Pulmonary  372
+4                      Orthopedic  355
+5                       Radiology  273
+6                General Medicine  259
+7                Gastroenterology  230
+8                       Neurology  223
+9   SOAP / Chart / Progress Notes  166
+10        Obstetrics / Gynecology  160
+11                        Urology  158
+12              Discharge Summary  108
+13           ENT - Otolaryngology   98
+14                   Neurosurgery   94
+15          Hematology - Oncology   90
+16                  Ophthalmology   83
+17                     Nephrology   81
+18         Emergency Room Reports   75
+19          Pediatrics - Neonatal   70
+20                Pain Management   62
+21        Psychiatry / Psychology   53
+22                   Office Notes   51
+23                       Podiatry   47
+24                    Dermatology   29
+25     Cosmetic / Plastic Surgery   27
+26                      Dentistry   27
+27                        Letters   23
+28      Physical Medicine - Rehab   21
+29                 Sleep Medicine   20
+30                  Endocrinology   19
+31                     Bariatrics   18
+32         IME-QME-Work Comp etc.   16
+33                   Chiropractic   14
+34           Diets and Nutritions   10
+35                   Rheumatology   10
+36              Speech - Language    9
+37                        Autopsy    8
+38       Lab Medicine - Pathology    8
+39           Allergy / Immunology    7
+40      Hospice - Palliative Care    6</code></pre>
+</div>
+</div>
+</section>
+<section id="question-2" class="level2">
+<h2 class="anchored" data-anchor-id="question-2">Question 2</h2>
+<p>The most frequently appearing words are stop words such as articles and other grammatically functional words. It makes sense. To get meaningful words, we should remove them. The top 20 most frequent words were visualized and the most frequent word is “the” which is shown nearly 150,000 times. It is hard to get any insight from these words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokenize the the words in the transcription column</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>tidy_words <span class="ot">&lt;-</span> mtsamples <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, transcription)  <span class="co">#word =tokens</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of times each token appears</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>word_counts <span class="ot">&lt;-</span> tidy_words <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the top 20 most frequent words</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>word_counts <span class="sc">%&gt;%</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 20 Most Frequent Words"</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Word"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lab6_Resubmission_So_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-3" class="level2">
+<h2 class="anchored" data-anchor-id="question-3">Question 3</h2>
+<p>Stop words were removed and the numbers as well. Now, the top 20 words give us better idea about the text. Among the 20 words the most frequently used word is “patient” with over 20,000 frequncy. From these top 20 words, we can geuss this text is related to medical context, especially related to patients.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-do the visualization but remove stop words before making it</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#stop_words</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mtsamples <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, transcription) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"word"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"^[0-9]+$"</span>, word)) <span class="sc">|&gt;</span> <span class="co"># Remove numbers!!!!</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(n, <span class="fu">fct_reorder</span>(word, n))) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Frequency"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Word"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top 20 Frequent Words After Removing Stop Words"</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lab6_Resubmission_So_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-4" class="level2">
+<h2 class="anchored" data-anchor-id="question-4">Question 4</h2>
+<p>The bigrams still shows a lot of stop words and hard to pick up informative phrases, but at tri-gram, the non-stop words were more shown, resulting in finding some common phrases such as the operating room, tolerated the procedure, past medical history, etc.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bigrams</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bigrams <span class="ot">&lt;-</span> mtsamples <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(bigram, transcription, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>bigram_counts <span class="ot">&lt;-</span> bigrams <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(bigram, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>bigram_counts <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(bigram, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Bigrams"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Bigram"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lab6_Resubmission_So_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Trigrams</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>trigrams <span class="ot">&lt;-</span> mtsamples <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(trigram, transcription, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">3</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>trigram_counts <span class="ot">&lt;-</span> trigrams <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(trigram, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>trigram_counts <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(trigram, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Trigrams"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Trigram"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lab6_Resubmission_So_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-5" class="level2">
+<h2 class="anchored" data-anchor-id="question-5">Question 5</h2>
+<p>I chose blood because it is hardly used with “the” and it can be a compound words both at the front and back. The word before “blood” with the highest frequency is “estimated” (n=754), and the most frequent word after “blood” is “pressure” (n= 1265).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>bigram_separated <span class="ot">&lt;-</span> bigrams <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(bigram, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Words before</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>bigram_separated <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word2 <span class="sc">==</span> <span class="st">"blood"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word1, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              word1   n
+1         estimated 754
+2             white 180
+3             signs 170
+4               and 154
+5                of 149
+6               red 123
+7               her 116
+8               his  99
+9               the  96
+10               no  72
+11                a  68
+12             high  55
+13           pounds  48
+14              for  45
+15             with  38
+16             cold  29
+17               18  28
+18             cord  28
+19          fasting  28
+20               or  28
+21         elevated  27
+22        patient's  26
+23               up  25
+24              low  24
+25             oral  24
+26      examination  23
+27               20  21
+28         arterial  21
+29             none  19
+30           venous  19
+31               16  16
+32         afebrile  16
+33       fahrenheit  15
+34          minimal  15
+35           occult  15
+36          general  14
+37           minute  14
+38          resting  14
+39         systolic  14
+40               to  14
+41              any  13
+42            fresh  13
+43          initial  13
+44                3  12
+45             cuff  12
+46           normal  12
+47       peripheral  12
+48        remaining  12
+49             tube  11
+50        complaint  10
+51             good  10
+52              had  10
+53     hypertension  10
+54             some  10
+55               67   9
+56               as   9
+57               by   9
+58          clotted   9
+59         multiple   9
+60           stable   9
+61              inc   8
+62          minutes   8
+63        pulmonary   8
+64          routine   8
+65         systemic   8
+66            trace   8
+67               84   7
+68           artery   7
+69        condition   7
+70          degrees   7
+71            dried   7
+72             peak   7
+73         positive   7
+74             rate   7
+75          regular   7
+76                2   6
+77               72   6
+78               83   6
+79             97.7   6
+80           better   6
+81          correct   6
+82            gross   6
+83               if   6
+84           inches   6
+85               ml   6
+86              old   6
+87           recent   6
+88            saver   6
+89             this   6
+90            total   6
+91     uncontrolled   6
+92             warm   6
+93               75   5
+94               76   5
+95               86   5
+96             97.5   5
+97            acute   5
+98     constipation   5
+99          control   5
+100             crp   5
+101       diagnosis   5
+102       diastolic   5
+103       increased   5
+104  intraoperative   5
+105         maximum   5
+106          strips   5
+107    subarachnoid   5
+108         without   5
+109               4   4
+110              60   4
+111              68   4
+112              90   4
+113              94   4
+114            97.6   4
+115              98   4
+116            98.2   4
+117           again   4
+118             all   4
+119     appropriate   4
+120              be   4
+121          bright   4
+122             cmv   4
+123      collateral   4
+124  constitutional   4
+125       currently   4
+126            data   4
+127        detected   4
+128           fever   4
+129           frank   4
+130       heartburn   4
+131     heparinized   4
+132              in   4
+133              is   4
+134              kg   4
+135       lidocaine   4
+136         monitor   4
+137        negative   4
+138     noninvasive   4
+139           noted   4
+140         obvious   4
+141           other   4
+142              ph   4
+143     preliminary   4
+144     principally   4
+145       procedure   4
+146       pulsatile   4
+147          random   4
+148        received   4
+149            time   4
+150           today   4
+151            well   4
+152              03   3
+153           100.3   3
+154             145   3
+155             177   3
+156              28   3
+157            35.6   3
+158              55   3
+159              71   3
+160      additional   3
+161          cancer   3
+162         cardiac   3
+163              cc   3
+164        cervical   3
+165         closure   3
+166        complete   3
+167      controlled   3
+168         culture   3
+169            dark   3
+170            date   3
+171    differential   3
+172      difficulty   3
+173            easy   3
+174        enlarged   3
+175            exam   3
+176       excellent   3
+177           extra   3
+178               f   3
+179             ffp   3
+180          fixing   3
+181            from   3
+182             gas   3
+183          grafts   3
+184            inch   3
+185      infectious   3
+186          injury   3
+187          lesion   3
+188          little   3
+189            mmhg   3
+190        obtained   3
+191            pain   3
+192         provide   3
+193           raise   3
+194         receive   3
+195       receiving   3
+196          repeat   3
+197       requiring   3
+198        reviewed   3
+199         setting   3
+200          showed   3
+201            skin   3
+202       stricture   3
+203        subdural   3
+204         surgery   3
+205            that   3
+206       urination   3
+207         uterine   3
+208           veins   3
+209        vomiting   3
+210           where   3
+211               1   2
+212           1.010   2
+213             1.1   2
+214           101.6   2
+215           103.2   2
+216             105   2
+217              11   2
+218             116   2
+219           121.4   2
+220             122   2
+221             146   2
+222             167   2
+223              17   2
+224           181.2   2
+225              19   2
+226            2004   2
+227            2006   2
+228             204   2
+229            22.4   2
+230              24   2
+231             240   2
+232              32   2
+233              34   2
+234              35   2
+235            35.8   2
+236              36   2
+237            36.5   2
+238            36.6   2
+239              48   2
+240              50   2
+241           578.1   2
+242               6   2
+243              61   2
+244              64   2
+245              69   2
+246              80   2
+247               9   2
+248              93   2
+249              96   2
+250            96.5   2
+251            96.6   2
+252            96.7   2
+253            97.1   2
+254            97.8   2
+255            98.0   2
+256            98.4   2
+257            98.5   2
+258            99.1   2
+259            99.2   2
+260            99.9   2
+261          actual   2
+262    administered   2
+263           after   2
+264          agents   2
+265            also   2
+266     approximate   2
+267             are   2
+268        aspirate   2
+269      associated   2
+270              at   2
+271      autologous   2
+272        bacteria   2
+273         bandage   2
+274        baseline   2
+275          before   2
+276            belt   2
+277             bnp   2
+278          bypass   2
+279       capillary   2
+280             cbc   2
+281           check   2
+282 cholecystectomy   2
+283         chronic   2
+284           clear   2
+285           close   2
+286            clot   2
+287              cm   2
+288   complications   2
+289         consent   2
+290         contain   2
+291     cooperative   2
+292         counted   2
+293         current   2
+294        detailed   2
+295        dialysis   2
+296        diarrhea   2
+297       difficile   2
+298         dilated   2
+299       discharge   2
+300         disease   2
+301        disorder   2
+302          doctor   2
+303            done   2
+304         doppler   2
+305             dry   2
+306          ectopy   2
+307           edema   2
+308    endotracheal   2
+309          except   2
+310        excision   2
+311        findings   2
+312     fingerstick   2
+313         flushed   2
+314            free   2
+315         getting   2
+316         glucose   2
+317            goal   2
+318              gu   2
+319             has   2
+320          higher   2
+321            hour   2
+322           ideal   2
+323      impression   2
+324         include   2
+325       including   2
+326             inr   2
+327       intubated   2
+328       labetalol   2
+329           large   2
+330            last   2
+331           later   2
+332          latest   2
+333              lb   2
+334              lg   2
+335          limits   2
+336           liver   2
+337           major   2
+338         maximal   2
+339              mg   2
+340            mild   2
+341             min   2
+342         minimum   2
+343            more   2
+344          mucosa   2
+345              my   2
+346     nasopharynx   2
+347            need   2
+348      negligible   2
+349      nonfasting   2
+350         norvasc   2
+351          obtain   2
+352        occluded   2
+353             one   2
+354         ordered   2
+355     orthostatic   2
+356          oxygen   2
+357       patient’s   2
+358      persistent   2
+359         pleural   2
+360            poor   2
+361      presenting   2
+362        previous   2
+363       providing   2
+364             ray   2
+365         recheck   2
+366         refused   2
+367        repeated   2
+368        resolved   2
+369            room   2
+370     saturations   2
+371       screening   2
+372        sedation   2
+373          seeing   2
+374            self   2
+375          serial   2
+376         service   2
+377         similar   2
+378           sinus   2
+379           space   2
+380        standard   2
+381            stay   2
+382          stones   2
+383            suck   2
+384        symptoms   2
+385           takes   2
+386         tenuous   2
+387           treat   2
+388       unclotted   2
+389           urine   2
+390      vancomycin   2
+391         vessels   2
+392          vicryl   2
+393             was   2
+394            wbcs   2
+395            when   2
+396           wound   2
+397               x   2
+398             120   1
+399              70   1
+400              78   1
+401              82   1
+402              95   1
+403            99.8   1
+404          anemia   1
+405              dl   1
+406            down   1
+407            drew   1
+408             ekg   1
+409          enough   1
+410       granuloma   1
+411            have   1
+412       improving   1
+413      infections   1
+414         injured   1
+415         january   1
+416      klebsiella   1
+417          liquid   1
+418           lower   1
+419              mm   1
+420          needle   1
+421             neg   1
+422       operative   1
+423              ra   1
+424    respectively   1
+425         results   1
+426          reveal   1
+427           scant   1
+428       semifluid   1
+429     significant   1
+430         sitting   1
+431           small   1
+432        standing   1
+433         studies   1
+434          supine   1
+435      underlying   1
+436      urinalysis   1
+437           vital   1
+438          vitals   1
+439           which   1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Words after</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>bigram_separated <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word1 <span class="sc">==</span> <span class="st">"blood"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               word2    n
+1           pressure 1265
+2               loss  965
+3               cell  130
+4                 in  114
+5              cells  112
+6              sugar   91
+7                and   84
+8             sugars   79
+9                was   65
+10          cultures   53
+11              flow   45
+12       transfusion   42
+13              work   39
+14           glucose   37
+15                or   33
+16            return   33
+17           vessels   33
+18               per   32
+19         pressures   31
+20           culture   30
+21             clots   27
+22             count   27
+23            supply   25
+24         potassium   24
+25              test   20
+26      transfusions   20
+27              type   16
+28          glucoses   15
+29             tests   15
+30              clot   14
+31            tinged   14
+32          coughing   13
+33              from   13
+34                on   13
+35               gas   12
+36           studies   11
+37              with   11
+38            within   11
+39            bright   10
+40      cardioplegia    7
+41               the    7
+42             gases    6
+43             mucus    6
+44             noted    6
+45          products    6
+46          thinners    6
+47             under    6
+48              were    6
+49               but    5
+50               for    5
+51        impression    5
+52                is    5
+53            sputum    5
+54                 a    4
+55         antegrade    4
+56        assessment    4
+57             borne    4
+58          draining    4
+59             found    4
+60        hemostasis    4
+61              here    4
+62        internally    4
+63      lymphoblasts    4
+64              near    4
+65               pcr    4
+66          positive    4
+67         seldinger    4
+68             there    4
+69             these    4
+70          tingeing    4
+71            vessel    4
+72             which    4
+73                25    3
+74                as    3
+75         attention    3
+76              back    3
+77       cholesterol    3
+78            coming    3
+79         disorders    3
+80               due    3
+81           through    3
+82             urine    3
+83            volume    3
+84            wounds    3
+85                 3    2
+86                53    2
+87             again    2
+88               air    2
+89           alcohol    2
+90        associated    2
+91             brain    2
+92       chemistries    2
+93          clotting    2
+94             colts    2
+95            counts    2
+96                cx    2
+97          distally    2
+98              does    2
+99          donation    2
+100               dr    2
+101            draws    2
+102           easily    2
+103          ethanol    2
+104          factors    2
+105           feeder    2
+106          filling    2
+107          greater    2
+108            group    2
+109               he    2
+110        hepatitis    2
+111      indications    2
+112 intraoperatively    2
+113           lipids    2
+114               lp    2
+115            lupus    2
+116        lymphatic    2
+117            mixed    2
+118         negative    2
+119             over    2
+120           oxygen    2
+121         placenta    2
+122  postoperatively    2
+123          present    2
+124          pressor    2
+125         replaced    2
+126            right    2
+127           sample    2
+128          samples    2
+129       secretions    2
+130             sent    2
+131        technique    2
+132          testing    2
+133             that    2
+134             this    2
+135            total    2
+136           typing    2
+137             urea    2
+138        vaginally    2
+139               we    2
+140            while    2
+141             will    2
+142          without    2
+143           workup    2
+144               30    1
+145      amphetamine    1
+146      barbiturate    1
+147   benzodiazepine    1
+148     cannabinoids    1
+149           carbon    1
+150          cocaine    1
+151             dark    1
+152             drug    1
+153            heart    1
+154              i.e    1
+155            liver    1
+156         material    1
+157        methadone    1
+158          opiates    1
+159              pcp    1
+160         required    1
+161             well    1</code></pre>
+</div>
+</div>
+</section>
+<section id="question-6" class="level2">
+<h2 class="anchored" data-anchor-id="question-6">Question 6</h2>
+<p>The 5 most used words for each specialty were listed in a tibble. Some interesting pairs were showed up including Endocrinology-thyroid (n=129), Dentistry-tooth (n=108), and Obstetrics / Gynecology-uterus (n=317)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove stop words</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>top_words_specialty <span class="ot">&lt;-</span> mtsamples <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, transcription) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(word, <span class="st">"^[0-9]+$"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(medical_specialty, word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># specialty-specific words</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>top_words_specialty <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(medical_specialty) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">5</span>, n) <span class="sc">%&gt;%</span>         </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(medical_specialty, <span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 210 × 3
+# Groups:   medical_specialty [40]
+   medical_specialty       word          n
+   &lt;chr&gt;                   &lt;chr&gt;     &lt;int&gt;
+ 1 " Allergy / Immunology" history      38
+ 2 " Allergy / Immunology" noted        23
+ 3 " Allergy / Immunology" patient      22
+ 4 " Allergy / Immunology" allergies    21
+ 5 " Allergy / Immunology" nasal        13
+ 6 " Allergy / Immunology" past         13
+ 7 " Autopsy"              left         83
+ 8 " Autopsy"              inch         59
+ 9 " Autopsy"              neck         55
+10 " Autopsy"              anterior     47
+# ℹ 200 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="question-7---extra" class="level2">
+<h2 class="anchored" data-anchor-id="question-7---extra">Question 7 - extra</h2>
+<p>I looked for specialty specific words by using TF-IDF (Term Frequency-Inverse Document Frequency) with bind_tf_idf() and listed up the top 3 high TF-IDF words in each specialty. One interesting finding is Cosmetic / Plastic Surgery has breast, midface, and nipple indicating they are dealing more breast or face than other specialty. Neurology has cn (Cranial Nerves), fhx(Family History), and shx (Social History). One possible interpretation is that the field uses more abbrebiation than other field.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## TF-IDF words in specialty</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tfidf_words <span class="ot">&lt;-</span> mtsamples <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(transcription)) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, transcription) <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"^[0-9]+$"</span>, word)) <span class="sc">|&gt;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(medical_specialty, word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_tf_idf</span>(word, medical_specialty, n) <span class="sc">|&gt;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(medical_specialty, <span class="fu">desc</span>(tf_idf))</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#tfidf_words </span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="do">## The most characteristical word (Highest TF-IDF) in one specialty</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>unique_words_by_specialty <span class="ot">&lt;-</span> tfidf_words <span class="sc">|&gt;</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(medical_specialty) <span class="sc">|&gt;</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(tf_idf, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(medical_specialty, word, tf_idf)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>unique_words_by_specialty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 120 × 3
+   medical_specialty             word       tf_idf
+   &lt;chr&gt;                         &lt;chr&gt;       &lt;dbl&gt;
+ 1 " Allergy / Immunology"       ivig      0.00652
+ 2 " Allergy / Immunology"       allegra   0.00648
+ 3 " Allergy / Immunology"       inhalant  0.00578
+ 4 " Autopsy"                    petechial 0.00983
+ 5 " Autopsy"                    ligature  0.00817
+ 6 " Autopsy"                    furrow    0.00750
+ 7 " Bariatrics"                 gastric   0.00667
+ 8 " Bariatrics"                 roux      0.00521
+ 9 " Bariatrics"                 bypass    0.00518
+10 " Cardiovascular / Pulmonary" artery    0.00360
+# ℹ 110 more rows</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
